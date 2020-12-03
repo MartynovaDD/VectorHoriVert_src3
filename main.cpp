@@ -11,14 +11,12 @@ int main() {
 	Quad C(bl,tr);
 	Point p(5, 5);
 	C.Add(p);
-	Point cp(1, 1);
+	Point cp(3, 3);
 	C.Add(cp);
-	//Point c(1, 1);
-	//C.Add(c);
-	Point k(1, 7);
-	C.Add(k);
+	Point c(1, 1);
+	C.Add(c);
 	//Point m(7, 7);  ////??????????
-	Point m(3, 3);
+	Point m(1, 1);
 	C.Add(m);
 	return 0;
 }

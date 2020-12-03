@@ -25,7 +25,6 @@ class CNode {
     Point bl, tr;
     CNode* par, * TL, * TR, * BL, * BR;
     CNode() {
-        k = false;
         bl.x = NULL;
         bl.y = NULL;
         par = TL = TR = BL = BR = NULL;
@@ -44,7 +43,9 @@ class CNode {
         bl.y = _bl.y; 
         tr.x = _tr.x;
         tr.y = _tr.y;
-        if(p.x!=NULL){ k = true; }
+        if (p.x != NULL && p.y != NULL) {
+            k = true;
+        }
         else { k = false; }
         //k = true;
     }
