@@ -3,12 +3,14 @@
 #include <math.h>
 #include <stdio.h>
 #pragma once
+void Autotest();
+
 
 class Point {
 public:
-    int x;
-    int y;
-    Point(int _x, int _y) {
+    double x;
+    double y;
+    Point(double _x, double _y) {
         x = _x;
         y = _y;
     }
@@ -20,27 +22,22 @@ public:
 };
 
 class CNode {
+public:
     bool k;
     Point p;
     Point bl, tr;
     CNode* par, * TL, * TR, * BL, * BR;
     CNode() {
+        p.x = NULL;
+        p.y = NULL;
         bl.x = NULL;
         bl.y = NULL;
         par = TL = TR = BL = BR = NULL;
     }
-    /*CNode(Point _bl, Point _tr) {          //????????????????????????????
-        bl.x = _bl.x;
-        bl.y = _bl.y; 
-        tr.x = _tr.x;
-        tr.y = _tr.y;
-        par = TL = TR = BL = BR = NULL;
-        k = false;  // нет точки
-    }*/
     CNode(Point p_, CNode* par_, Point _bl, Point _tr) {
         par = par_; p.x = p_.x; p.y = p_.y; TL = TR = BL = BR = NULL;
         bl.x = _bl.x;
-        bl.y = _bl.y; 
+        bl.y = _bl.y;
         tr.x = _tr.x;
         tr.y = _tr.y;
         if (p.x != NULL && p.y != NULL) {
@@ -66,9 +63,13 @@ public:
     int Empty() { return root == NULL; }
     void Clean() { while (Delete(root) != 0); }
     int Delete(CNode* n) { return 0; }
+    //int Del(CNode* n);
     int Add(Point t);
     int DeleteNode(Point t);
-    bool Find(Point t);
-    //int Quantity(Point bl, Point tr);
+    CNode* Find(Point t);
+    //int Quantity(Point bl, Point tr, CNode* root);
+    int Quantity();
+    void Quantity1(CNode* p);
+    void Vicinity(Point p);
 };
 

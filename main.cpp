@@ -7,16 +7,22 @@ using namespace std;
 
 int main() {
 	Point bl(0, 0);
-	Point tr(8, 8);
-	Quad C(bl,tr);
-	Point p(5, 5);
+	Point tr(9, 9);
+	Quad C(bl, tr);
+	Point p(1, 1);
 	C.Add(p);
-	Point cp(3, 3);
+	Point a(2, 2);
+	C.Add(a);
+	C.DeleteNode(a);
+	C.Add(a);
+	Point cp(3, 4);
 	C.Add(cp);
 	Point c(1, 1);
 	C.Add(c);
-	//Point m(7, 7);  ////??????????
-	Point m(1, 1);
-	C.Add(m);
+	Point m(8, 5);
+	C.Find(m);
+	C.Quantity();
+	C.Vicinity(p);
+	Autotest();
 	return 0;
 }
