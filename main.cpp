@@ -13,7 +13,7 @@ int main() {
 	C.Add(p);
 	Point a(2, 2);
 	C.Add(a);
-	C.DeleteNode(a);
+	/*C.DeleteNode(a);
 	C.Add(a);
 	Point cp(3, 4);
 	C.Add(cp);
@@ -23,6 +23,6 @@ int main() {
 	C.Find(m);
 	C.Quantity();
 	C.Vicinity(p);
-	Autotest();
+	Autotest();*/
 	return 0;
 }
