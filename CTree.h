@@ -28,6 +28,7 @@ public:
     Point bl, tr;
     CNode* par, * TL, * TR, * BL, * BR;
     CNode() {
+        k = false;
         p.x = NULL;
         p.y = NULL;
         bl.x = NULL;
@@ -44,18 +45,17 @@ public:
             k = true;
         }
         else { k = false; }
-        //k = true;
     }
     friend class Quad;
 };
 
 class Quad {
-    CNode* root = new CNode();//указатель на корень дерева
+    CNode* root = new CNode();
 public:
     Quad() { root = NULL; }
-    Quad(Point bl_, Point tr_) {   //границы исходного квадрата
-        root->bl.x = bl_.x;
-        root->bl.y = bl_.y;
+    Quad(Point tr_) {
+        root->bl.x = 0;
+        root->bl.y = 0;
         root->tr.x = tr_.x;
         root->tr.y = tr_.y;
     }
@@ -63,11 +63,9 @@ public:
     int Empty() { return root == NULL; }
     void Clean() { while (Delete(root) != 0); }
     int Delete(CNode* n) { return 0; }
-    //int Del(CNode* n);
     int Add(Point t);
     int DeleteNode(Point t);
     CNode* Find(Point t);
-    //int Quantity(Point bl, Point tr, CNode* root);
     int Quantity();
     void Quantity1(CNode* p);
     void Vicinity(Point p);

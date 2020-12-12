@@ -1,4 +1,4 @@
-#include "CTree.h"
+п»ї#include "CTree.h"
 #include <queue>
 #include <fstream>
 #include <iostream>
@@ -8,56 +8,62 @@ using namespace std;
 
 
 int Quad::Add(Point _t) {
-	Point t = _t;  // вставляемая точка
-	Point bl; //левый нижний угол
-	Point tr; // правый вегхний
-	int a = 0; // 0 если вставили, 1 вставили точку
+	Point t = _t;
+	Point bl;
+	Point tr;
+	int a = 0;
 	CNode* n;
 	Point null(NULL, NULL);
 	CNode* nul = NULL;
-	CNode* tochka = new CNode(null, nul, bl, tr);;  // точка котрая уже есть в квадрате
+	CNode* tochka = new CNode(null, nul, bl, tr);
 	n = root;
 	int f = 0, s = 0;
-	if (t.x < root->bl.x || t.x > root->tr.x || t.y > root->tr.y || t.y < root->bl.y) {   // если точка выходит за границы 
-		cout << "tochka ne vhodit v oblast'" << endl;
+	if (t.x < root->bl.x || t.x > root->tr.x || t.y > root->tr.y || t.y < root->bl.y) { 
+		cout << "ne dobavili tochky. (" << t.x << "," << t.y << ") ne vhodit v oblast'" << endl;
 		return -1;
 	}
 	else {
-		if (root->p.x == NULL && root->k == false) {  // вставляем первую точку
-			root->p.x = t.x;
-			root->p.y = t.y;
-			root->k = true;
-			cout << "dobavili vershiny (" << t.x << "," << t.y << ")" << endl;
+		if (root->p.x == NULL && root->k == false) { 
+			if (t.x == n->tr.x || t.x == n->bl.x || t.y == n->tr.y || t.y == n->bl.y) { 
+				a = 1;
+				cout << "ne dobavili vershiny (" << t.x << "," << t.y << ")" << endl;
+			}
+			else {
+				root->p.x = t.x;
+				root->p.y = t.y;
+				root->k = true;
+				cout << "dobavili vershiny (" << t.x << "," << t.y << ")" << endl;
+			}
 			return 0;
 		}
 		else {
-			while (a != 1) {       // пока не вcтавим
-				if (n->p.x == t.x && n->p.y == t.y) { a = 1; cout << "tochka (" << t.x << "," << t.y << ") yze est'" << endl; return -1; } // если уже есть эта точка
-				else if (t.x == (n->tr.x + n->bl.x) / 2 || t.y == (n->tr.y + n->bl.y) / 2) {   // если точка попадает на пересечение
+			while (a != 1) {
+				if (n->p.x == t.x && n->p.y == t.y) { a = 1; cout << "ne dobavili tochky. (" << t.x << "," << t.y << ") yze est' v dereve" << endl; return -1; }
+				else if (t.x == (n->tr.x + n->bl.x) / 2 || t.y == (n->tr.y + n->bl.y) / 2 || t.x == n->tr.x || t.x == n->bl.x || t.y == n->tr.y || t.y == n->bl.y) {
 					a = 1;
-					cout << "ne vstavili tochky. popadaet na peresechenie" << endl;
+					cout << "ne dobavili tochky. tochka("<<t.x<<","<<t.y<<") popadaet na peresechenie" << endl;
 				}
-				else if (t.x > (n->tr.x + n->bl.x) / 2 && t.y > (n->tr.y + n->bl.y) / 2) {   // если точка попадает в правый верхний угол
-					if (n->p.x != NULL || tochka->p.x != NULL) {       // если там уже есть точка
+				else if (t.x > (n->tr.x + n->bl.x) / 2 && t.y > (n->tr.y + n->bl.y) / 2) {
+					if (n->p.x != NULL || tochka->p.x != NULL) {
 						if (f == 0) {
-							tochka->p.x = n->p.x; tochka->p.y = n->p.y;                            // запоминаем эту точку
+							tochka->p.x = n->p.x; tochka->p.y = n->p.y; 
 							f = 1;
 							n->p.x = NULL;
 							n->p.y = NULL;
 						}
-						if (tochka->p.x == (n->tr.x + n->bl.x) / 2 && tochka->p.y == (n->tr.y + n->bl.y) / 2) { // если существующая точка при разбиении попадет на пересечение
+						if (tochka->p.x == (n->tr.x + n->bl.x) / 2 && tochka->p.y == (n->tr.y + n->bl.y) / 2) {
 							a = 1;
-							cout << "ne vstavili tochky" << endl;
+							cout << "ne dobavili tochky. tochka(" << tochka->p.x << "," << tochka->p.y << ") popadaet na peresechenie" << endl;
 						}
-						else if (tochka->p.x > (n->tr.x + n->bl.x) / 2 && tochka->p.y > (n->tr.y + n->bl.y) / 2) {  //точка попадает туда же
+						else if (tochka->p.x > (n->tr.x + n->bl.x) / 2 && tochka->p.y > (n->tr.y + n->bl.y) / 2) {
 							bl = Point((n->tr.x + n->bl.x) / 2, (n->tr.y + n->bl.y) / 2);
 							tr = Point(n->tr.x, n->tr.y);
 							n->TR = new CNode(null, n, bl, tr);
 							n->TR->k = true;
 							s = 1;
-							n = n->TR;  // переход
+							n = n->TR; 
 						}
-						else if (tochka->p.x < (n->tr.x + n->bl.x) / 2 && tochka->p.y >(n->tr.y + n->bl.y) / 2) { //если точка попадает в другой квадрат при разбиении
+						else if (tochka->p.x < (n->tr.x + n->bl.x) / 2 && tochka->p.y >(n->tr.y + n->bl.y) / 2) {
 							bl = Point(n->bl.x, (n->tr.y + n->bl.y) / 2);
 							tr = Point((n->tr.x + n->bl.x) / 2, n->tr.y);
 							n->TL = new CNode(tochka->p, n, bl, tr);
@@ -68,7 +74,7 @@ int Quad::Add(Point _t) {
 							a = 1;
 							n = n->TR;
 						}
-						else if (tochka->p.x < (n->tr.x + n->bl.x) / 2 && tochka->p.y < (n->tr.y + n->bl.y) / 2) {//если точка попадает в другой квадрат при разбиении
+						else if (tochka->p.x < (n->tr.x + n->bl.x) / 2 && tochka->p.y < (n->tr.y + n->bl.y) / 2) {
 							bl = Point(n->bl.x, n->bl.y);
 							tr = Point((n->tr.x + n->bl.x) / 2, (n->tr.y + n->bl.y) / 2);
 							n->BL = new CNode(tochka->p, n, bl, tr);
@@ -79,11 +85,11 @@ int Quad::Add(Point _t) {
 							a = 1;
 							n = n->TR;
 						}
-						else if (tochka->p.x > (n->tr.x + n->bl.x) / 2 && tochka->p.y < (n->tr.y + n->bl.y) / 2) {//если точка попадает в другой квадрат при разбиении
+						else if (tochka->p.x > (n->tr.x + n->bl.x) / 2 && tochka->p.y < (n->tr.y + n->bl.y) / 2) {//РµСЃР»Рё С‚РѕС‡РєР° РїРѕРїР°РґР°РµС‚ РІ РґСЂСѓРіРѕР№ РєРІР°РґСЂР°С‚ РїСЂРё СЂР°Р·Р±РёРµРЅРёРё
 							bl = Point((n->tr.x + n->bl.x) / 2, n->bl.y);
 							tr = Point(n->tr.x, (n->tr.y + n->bl.y) / 2);
-							n->BR = new CNode(tochka->p, n, bl, tr); //создаем квадрат для исходной точки
-							tochka->p.x = NULL; tochka->p.y = NULL;  //перемещаем точку на нижний уровень
+							n->BR = new CNode(tochka->p, n, bl, tr); 
+							tochka->p.x = NULL; tochka->p.y = NULL; 
 							bl = Point((n->tr.x + n->bl.x) / 2, (n->tr.y + n->bl.y) / 2);
 							tr = Point(n->tr.x, n->tr.y);
 							n->TR = new CNode(t, n, bl, tr);
@@ -91,40 +97,40 @@ int Quad::Add(Point _t) {
 							n = n->TR;
 						}
 					}
-					else if (s == 0 && n->p.x == NULL && n->p.y == NULL && n->TR == NULL) {//............если нет точек и никогда не было     // могут ли вообще быть такие ситуации???
+					else if (s == 0 && n->p.x == NULL && n->p.y == NULL && n->TR == NULL) {
 						bl = Point((n->tr.x + n->bl.x) / 2, (n->tr.y + n->bl.y) / 2);
 						tr = Point(n->tr.x, n->tr.y);
 						n->TR = new CNode(t, n, bl, tr);
 						a = 1;
 						n = n->TR;
 					}
-					else if (s == 0 && n->p.x == NULL && n->p.y == NULL && n->k == true && n->TR != NULL) {// .....................если нет точек, но были, а сейчас они в ветвях
+					else if (s == 0 && n->p.x == NULL && n->p.y == NULL && n->k == true && n->TR != NULL) {
 						n = n->TR;
 					}
 				}
 
 
-				else if (t.x < (n->tr.x + n->bl.x) / 2 && t.y >(n->tr.y + n->bl.y) / 2) {   // если точка попадает в левый верхний угол
-					if (n->p.x != NULL || tochka->p.x != NULL) {       // если там уже есть точка
+				else if (t.x < (n->tr.x + n->bl.x) / 2 && t.y >(n->tr.y + n->bl.y) / 2) {  
+					if (n->p.x != NULL || tochka->p.x != NULL) {   
 						if (f == 0) {
-							tochka->p.x = n->p.x; tochka->p.y = n->p.y;                            // запоминаем эту точку
+							tochka->p.x = n->p.x; tochka->p.y = n->p.y;           
 							f = 1;
 							n->p.x = NULL;
 							n->p.y = NULL;
 						}
-						if (tochka->p.x == (n->tr.x + n->bl.x) / 2 && tochka->p.y == (n->tr.y + n->bl.y) / 2) { // если существующая точка при разбиении попадет на пересечение
+						if (tochka->p.x == (n->tr.x + n->bl.x) / 2 && tochka->p.y == (n->tr.y + n->bl.y) / 2) { 
 							a = 1;
-							cout << "ne vstavili tochky" << endl;
+							cout << "ne dobavili tochky. tochka(" << tochka->p.x << "," << tochka->p.y << ") popadaet na peresechenie" << endl;
 						}
-						else if (tochka->p.x < (n->tr.x + n->bl.x) / 2 && tochka->p.y >(n->tr.y + n->bl.y) / 2) {  //но там уже есть точка, поэтому переходим в пв квадрат(уменьшаем убласть) и делаем тоже самое для него
+						else if (tochka->p.x < (n->tr.x + n->bl.x) / 2 && tochka->p.y >(n->tr.y + n->bl.y) / 2) {
 							bl = Point(n->bl.x, (n->tr.y + n->bl.y) / 2);
 							tr = Point((n->tr.x + n->bl.x) / 2, n->tr.y);
 							n->TL = new CNode(null, n, bl, tr);
 							n->TL->k = true;
-							n = n->TL;  // переход
+							n = n->TL; 
 							s = 1;
 						}
-						else if (tochka->p.x < (n->tr.x + n->bl.x) / 2 && tochka->p.y < (n->tr.y + n->bl.y) / 2) { //если точка попадает в другой квадрат при разбиении
+						else if (tochka->p.x < (n->tr.x + n->bl.x) / 2 && tochka->p.y < (n->tr.y + n->bl.y) / 2) { 
 							bl = Point(n->bl.x, n->bl.y);
 							tr = Point((n->tr.x + n->bl.x) / 2, (n->tr.y + n->bl.y) / 2);
 							n->BL = new CNode(tochka->p, n, bl, tr);
@@ -135,7 +141,7 @@ int Quad::Add(Point _t) {
 							a = 1;
 							n = n->TL;
 						}
-						else if (tochka->p.x > (n->tr.x + n->bl.x) / 2 && tochka->p.y < (n->tr.y + n->bl.y) / 2) {//если точка попадает в другой квадрат при разбиении
+						else if (tochka->p.x > (n->tr.x + n->bl.x) / 2 && tochka->p.y < (n->tr.y + n->bl.y) / 2) {
 							bl = Point((n->tr.x + n->bl.x) / 2, n->bl.y);
 							tr = Point(n->tr.x, (n->tr.y + n->bl.y) / 2);
 							n->BR = new CNode(tochka->p, n, bl, tr);
@@ -146,11 +152,11 @@ int Quad::Add(Point _t) {
 							a = 1;
 							n = n->TL;
 						}
-						else if (tochka->p.x > (n->tr.x + n->bl.x) / 2 && tochka->p.y > (n->tr.y + n->bl.y) / 2) {//если точка попадает в другой квадрат при разбиении
+						else if (tochka->p.x > (n->tr.x + n->bl.x) / 2 && tochka->p.y > (n->tr.y + n->bl.y) / 2) {
 							bl = Point((n->tr.x + n->bl.x) / 2, (n->tr.y + n->bl.y) / 2);
 							tr = Point(n->tr.x, n->tr.y);
-							n->TR = new CNode(tochka->p, n, bl, tr); //создаем квадрат для исходной точки
-							tochka->p.x = NULL; tochka->p.y = NULL;  //перемещаем точку на нижний уровень
+							n->TR = new CNode(tochka->p, n, bl, tr); 
+							tochka->p.x = NULL; tochka->p.y = NULL; 
 							bl = Point(n->bl.x, (n->tr.y + n->bl.y) / 2);
 							tr = Point((n->tr.x + n->bl.x) / 2, n->tr.y);
 							n->TL = new CNode(t, n, bl, tr);
@@ -158,40 +164,40 @@ int Quad::Add(Point _t) {
 							n = n->TL;
 						}
 					}
-					else if (s == 0 && n->p.x == NULL && n->p.y == NULL && n->TL == NULL) {//............если нет точек и никогда не было     // могут ли вообще быть такие ситуации???
+					else if (s == 0 && n->p.x == NULL && n->p.y == NULL && n->TL == NULL) {
 						bl = Point(n->bl.x, (n->tr.y + n->bl.y) / 2);
 						tr = Point((n->tr.x + n->bl.x) / 2, n->tr.y);
 						n->TL = new CNode(t, n, bl, tr);
 						a = 1;
 						n = n->TL;
 					}
-					else if (s == 0 && n->p.x == NULL && n->p.y == NULL && n->k == true) {// .....................если нет точек, но были, а сейчас они в ветвях
+					else if (s == 0 && n->p.x == NULL && n->p.y == NULL && n->TL != NULL) {
 						n = n->TL;
 					}
 				}
 
 
-				else if (t.x < (n->tr.x + n->bl.x) / 2 && t.y < (n->tr.y + n->bl.y) / 2) {   // если точка попадает в левый нижний угол
-					if (n->p.x != NULL || tochka->p.x != NULL) {       // если там уже есть точка						
+				else if (t.x < (n->tr.x + n->bl.x) / 2 && t.y < (n->tr.y + n->bl.y) / 2) { 
+					if (n->p.x != NULL || tochka->p.x != NULL) {
 						if (f == 0) {
-							tochka->p.x = n->p.x; tochka->p.y = n->p.y;                            // запоминаем эту точку
+							tochka->p.x = n->p.x; tochka->p.y = n->p.y;  
 							f = 1;
 							n->p.x = NULL;
 							n->p.y = NULL;
 						}
-						if (tochka->p.x == (n->tr.x + n->bl.x) / 2 && tochka->p.y == (n->tr.y + n->bl.y) / 2) { // если существующая точка при разбиении попадет на пересечение
+						if (tochka->p.x == (n->tr.x + n->bl.x) / 2 && tochka->p.y == (n->tr.y + n->bl.y) / 2) {
 							a = 1;
-							cout << "ne vstavili tochky" << endl;
+							cout << "ne dobavili tochky. tochka(" << tochka->p.x << "," << tochka->p.y << ") popadaet na peresechenie" << endl;
 						}
-						else if (tochka->p.x < (n->tr.x + n->bl.x) / 2 && tochka->p.y < (n->tr.y + n->bl.y) / 2) {  //но там уже есть точка, поэтому переходим в пв квадрат(уменьшаем убласть) и делаем тоже самое для него
+						else if (tochka->p.x < (n->tr.x + n->bl.x) / 2 && tochka->p.y < (n->tr.y + n->bl.y) / 2) { 
 							bl = Point(n->bl.x, n->bl.y);
 							tr = Point((n->tr.x + n->bl.x) / 2, (n->tr.y + n->bl.y) / 2);
 							n->BL = new CNode(null, n, bl, tr);
 							n->BL->k = true;
-							n = n->BL;  // переход
+							n = n->BL; 
 							s = 1;
 						}
-						else if (tochka->p.x > (n->tr.x + n->bl.x) / 2 && tochka->p.y < (n->tr.y + n->bl.y) / 2) { //если точка попадает в другой квадрат при разбиении
+						else if (tochka->p.x > (n->tr.x + n->bl.x) / 2 && tochka->p.y < (n->tr.y + n->bl.y) / 2) {
 							bl = Point((n->tr.x + n->bl.x) / 2, n->bl.y);
 							tr = Point(n->tr.x, (n->tr.y + n->bl.y) / 2);
 							n->BR = new CNode(tochka->p, n, bl, tr);
@@ -202,7 +208,7 @@ int Quad::Add(Point _t) {
 							a = 1;
 							n = n->BL;
 						}
-						else if (tochka->p.x > (n->tr.x + n->bl.x) / 2 && tochka->p.y > (n->tr.y + n->bl.y) / 2) {//если точка попадает в другой квадрат при разбиении
+						else if (tochka->p.x > (n->tr.x + n->bl.x) / 2 && tochka->p.y > (n->tr.y + n->bl.y) / 2) {
 							bl = Point((n->tr.x + n->bl.x) / 2, (n->tr.y + n->bl.y) / 2);
 							tr = Point(n->tr.x, n->tr.y);
 							n->TR = new CNode(tochka->p, n, bl, tr);
@@ -213,11 +219,11 @@ int Quad::Add(Point _t) {
 							a = 1;
 							n = n->BL;
 						}
-						else if (tochka->p.x < (n->tr.x + n->bl.x) / 2 && tochka->p.y >(n->tr.y + n->bl.y) / 2) {//если точка попадает в другой квадрат при разбиении
+						else if (tochka->p.x < (n->tr.x + n->bl.x) / 2 && tochka->p.y >(n->tr.y + n->bl.y) / 2) {
 							bl = Point(n->bl.x, (n->tr.y + n->bl.y) / 2);
 							tr = Point((n->tr.x + n->bl.x) / 2, n->tr.y);
-							n->TL = new CNode(tochka->p, n, bl, tr); //создаем квадрат для исходной точки
-							tochka->p.x = NULL; tochka->p.y = NULL;  //перемещаем точку на нижний уровень
+							n->TL = new CNode(tochka->p, n, bl, tr); 
+							tochka->p.x = NULL; tochka->p.y = NULL; 
 							bl = Point(n->bl.x, n->bl.y);
 							tr = Point((n->tr.x + n->bl.x) / 2, (n->tr.y + n->bl.y) / 2);
 							n->BL = new CNode(t, n, bl, tr);
@@ -225,39 +231,39 @@ int Quad::Add(Point _t) {
 							n = n->BL;
 						}
 					}
-					else if (s == 0 && n->p.x == NULL && n->p.y == NULL && n->BL == NULL) {//............если нет точек и никогда не было     // могут ли вообще быть такие ситуации???
+					else if (s == 0 && n->p.x == NULL && n->p.y == NULL && n->BL == NULL) {
 						bl = Point(n->bl.x, (n->tr.y + n->bl.y) / 2);
 						tr = Point((n->tr.x + n->bl.x) / 2, n->tr.y);
 						n->BL = new CNode(t, n, bl, tr);
 						a = 1;
 						n = n->BL;
 					}
-					else if (s == 0 && n->p.x == NULL && n->p.y == NULL && n->k == true) {// .....................если нет точек, но были, а сейчас они в ветвях
+					else if (s == 0 && n->p.x == NULL && n->p.y == NULL && n->BL != NULL) {
 						n = n->BL;
 					}
 				}
 
-				else if (t.x > (n->tr.x + n->bl.x) / 2 && t.y < (n->tr.y + n->bl.y) / 2) {   // если точка попадает в правый нижний угол
-					if (n->p.x != NULL || tochka->p.x != NULL) {       // если там уже есть точка
+				else if (t.x > (n->tr.x + n->bl.x) / 2 && t.y < (n->tr.y + n->bl.y) / 2) { 
+					if (n->p.x != NULL || tochka->p.x != NULL) {     
 						if (f == 0) {
-							tochka->p.x = n->p.x; tochka->p.y = n->p.y;                            // запоминаем эту точку
+							tochka->p.x = n->p.x; tochka->p.y = n->p.y;      
 							f = 1;
 							n->p.x = NULL;
 							n->p.y = NULL;
 						}
-						if (tochka->p.x == (n->tr.x + n->bl.x) / 2 && tochka->p.y == (n->tr.y + n->bl.y) / 2) { // если существующая точка при разбиении попадет на пересечение
+						if (tochka->p.x == (n->tr.x + n->bl.x) / 2 && tochka->p.y == (n->tr.y + n->bl.y) / 2) {
 							a = 1;
-							cout << "ne vstavili tochky" << endl;
+							cout << "ne dobavili tochky. tochka(" << tochka->p.x << "," << tochka->p.y << ") popadaet na peresechenie" << endl;
 						}
-						else if (tochka->p.x > (n->tr.x + n->bl.x) / 2 && tochka->p.y < (n->tr.y + n->bl.y) / 2) {  //но там уже есть точка, поэтому переходим в пв квадрат(уменьшаем убласть) и делаем тоже самое для него
+						else if (tochka->p.x > (n->tr.x + n->bl.x) / 2 && tochka->p.y < (n->tr.y + n->bl.y) / 2) { 
 							bl = Point((n->tr.x + n->bl.x) / 2, n->bl.y);
 							tr = Point(n->tr.x, (n->tr.y + n->bl.y) / 2);
 							n->BR = new CNode(null, n, bl, tr);
 							n->BR->k = true;
-							n = n->BR;  // переход
+							n = n->BR;
 							s = 1;
 						}
-						else if (tochka->p.x > (n->tr.x + n->bl.x) / 2 && tochka->p.y > (n->tr.y + n->bl.y) / 2) { //если точка попадает в другой квадрат при разбиении
+						else if (tochka->p.x > (n->tr.x + n->bl.x) / 2 && tochka->p.y > (n->tr.y + n->bl.y) / 2) { 
 							bl = Point((n->tr.x + n->bl.x) / 2, (n->tr.y + n->bl.y) / 2);
 							tr = Point(n->tr.x, n->tr.y);
 							n->TR = new CNode(tochka->p, n, bl, tr);
@@ -268,7 +274,7 @@ int Quad::Add(Point _t) {
 							a = 1;
 							n = n->BR;
 						}
-						else if (tochka->p.x < (n->tr.x + n->bl.x) / 2 && tochka->p.y >(n->tr.y + n->bl.y) / 2) {//если точка попадает в другой квадрат при разбиении
+						else if (tochka->p.x < (n->tr.x + n->bl.x) / 2 && tochka->p.y >(n->tr.y + n->bl.y) / 2) {
 							bl = Point(n->bl.x, (n->tr.y + n->bl.y) / 2);
 							tr = Point((n->tr.x + n->bl.x) / 2, n->tr.y);
 							n->TL = new CNode(tochka->p, n, bl, tr);
@@ -279,11 +285,11 @@ int Quad::Add(Point _t) {
 							a = 1;
 							n = n->BR;
 						}
-						else if (tochka->p.x < (n->tr.x + n->bl.x) / 2 && tochka->p.y < (n->tr.y + n->bl.y) / 2) {//если точка попадает в другой квадрат при разбиении
+						else if (tochka->p.x < (n->tr.x + n->bl.x) / 2 && tochka->p.y < (n->tr.y + n->bl.y) / 2) {
 							bl = Point(n->bl.x, n->bl.y);
 							tr = Point((n->tr.x + n->bl.x) / 2, (n->tr.y + n->bl.y) / 2);
-							n->BL = new CNode(tochka->p, n, bl, tr); //создаем квадрат для исходной точки
-							tochka->p.x = NULL; tochka->p.y = NULL;  //перемещаем точку на нижний уровень
+							n->BL = new CNode(tochka->p, n, bl, tr); 
+							tochka->p.x = NULL; tochka->p.y = NULL;
 							bl = Point((n->tr.x + n->bl.x) / 2, n->bl.y);
 							tr = Point(n->tr.x, (n->tr.y + n->bl.y) / 2);
 							n->BR = new CNode(t, n, bl, tr);
@@ -291,14 +297,14 @@ int Quad::Add(Point _t) {
 							n = n->BR;
 						}
 					}
-					else if (s == 0 && n->p.x == NULL && n->p.y == NULL && n->BR == NULL) {//............если нет точек и никогда не было     // могут ли вообще быть такие ситуации???
+					else if (s == 0 && n->p.x == NULL && n->p.y == NULL && n->BR == NULL) {
 						bl = Point((n->tr.x + n->bl.x) / 2, n->bl.y);
 						tr = Point(n->tr.x, (n->tr.y + n->bl.y) / 2);
 						n->BR = new CNode(t, n, bl, tr);
 						a = 1;
 						n = n->BR;
 					}
-					else if (s == 0 && n->p.x == NULL && n->p.y == NULL && n->k == true) {// .....................если нет точек, но были, а сейчас они в ветвях
+					else if (s == 0 && n->p.x == NULL && n->p.y == NULL && n->BR != NULL) {
 						n = n->BR;
 					}
 				}
@@ -315,11 +321,11 @@ int Quad::Add(Point _t) {
 
 
 int Quad::DeleteNode(Point _t) {
-	Point t = _t;  // удаляемая точка
-	int a = 0; // 0 если не удалили, 1 удалили точку
+	Point t = _t;
+	int a = 0;
 	CNode* n;
 	n = root;
-	if (t.x < root->bl.x || t.x > root->tr.x || t.y > root->tr.y || t.y < root->bl.y) { // если точка выходит за границы 
+	if (t.x < root->bl.x || t.x > root->tr.x || t.y > root->tr.y || t.y < root->bl.y) { 
 		cout << "tochka vihodit za oblast'" << endl;
 		return -1;
 	}
@@ -376,12 +382,12 @@ int Quad::DeleteNode(Point _t) {
 }
 
 CNode* Quad::Find(Point _t) {
-	Point t = _t;  // вставляемая точка
-	int a = 0; // 0 если вставили, 1 вставили точку
+	Point t = _t;  
+	int a = 0; 
 	CNode* n;
 	n = root;
 	bool l;
-	if ((root->bl.x > t.x && t.x > root->tr.x) || (root->bl.y > t.y && t.y > root->tr.y)) { // если точка выходит за границы 
+	if ((root->bl.x > t.x && t.x > root->tr.x) || (root->bl.y > t.y && t.y > root->tr.y)) { 
 		l = false;
 		return NULL;
 	}
