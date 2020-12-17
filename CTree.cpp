@@ -330,7 +330,7 @@ int Quad::DeleteNode(Point _t) {
 		return -1;
 	}
 	else if (root->p.x == t.x && root->p.y == t.y) {
-		root = NULL;
+		delete root;
 		cout << "ydalili koren'" << endl;
 		return 0;
 	}
@@ -344,7 +344,7 @@ int Quad::DeleteNode(Point _t) {
 
 				if (n->TR->p.x == t.x && n->TR->p.y == t.y) {
 					a = 1;
-					n->TR = NULL;
+					delete n->TR;
 				}
 				else {
 					n = n->TR;
@@ -354,13 +354,13 @@ int Quad::DeleteNode(Point _t) {
 				n = n->TL;
 				if (n->p.x == t.x && n->p.y == t.y) {
 					a = 1;
-					n->par->TL = NULL;
+					delete n->par->TL;
 				}
 			}
 			else if (t.x < (n->tr.x - n->bl.x) / 2 && t.y < (n->tr.y - n->bl.y) / 2) {
 				if (n->BL->p.x == t.x && n->BL->p.y == t.y) {
 					a = 1;
-					n->BL = NULL;
+					delete n->BL;
 				}
 				else {
 					n = n->BL;
@@ -369,7 +369,7 @@ int Quad::DeleteNode(Point _t) {
 			else if (t.x > (n->tr.x + n->bl.x) / 2 && t.y < (n->tr.y + n->bl.y) / 2) {
 				if (n->BR->p.x == t.x && n->BR->p.y == t.y) {
 					a = 1;
-					n->BR = NULL;
+					delete n->BR;
 				}
 				else {
 					n = n->BR;
@@ -477,6 +477,29 @@ CNode* Quad::Find(Point _t) {
 			return n;
 		}
 	}
+}
+
+int Quad::Del() {
+	queue<CNode*> Queue;
+	Queue.push(root);
+	while (!Queue.empty()) {
+		CNode* n = Queue.front();
+		Queue.pop();
+		if (n->TR != NULL) {
+			Queue.push(n->TR);
+		}
+		if (n->TL != NULL) {
+			Queue.push(n->TL);
+		}
+		if (n->BL != NULL) {
+			Queue.push(n->BL);
+		}
+		if (n->BR != NULL) {
+			Queue.push(n->BR);
+		}
+		delete n;
+	}
+	return 0;
 }
 
 int Quad::Quantity() {

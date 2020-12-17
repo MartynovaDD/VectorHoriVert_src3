@@ -61,9 +61,9 @@ public:
     }
     ~Quad() { Clean(); }
     int Empty() { return root == NULL; }
-    void Clean() { while (Delete(root) != 0); }
-    int Delete(CNode* n) { return 0; }
+    void Clean() {Del(); }
     int Add(Point t);
+    int Del();
     int DeleteNode(Point t);
     CNode* Find(Point t);
     int Quantity();
